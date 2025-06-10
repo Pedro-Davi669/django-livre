@@ -11,18 +11,18 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_ROOT=os.path.join(BASE_DIR, 'static')
 
-STATIC_ROOT=os.path.join(BASE_DIR, 'static')#
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3f1=wa&r-hidae11mkjj76ym5do+_ld@kk&bs+%t7w(m&)fnw&'
+SECRET_KEY = 'django-insecure-(%k@f#1(2)s_5vyl^65nwwog=o=lakj1%2^dg*7@b_g)oxk)c-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'loja',
+    "loja",
 ]
 
 MIDDLEWARE = [
@@ -119,6 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
 
