@@ -105,6 +105,8 @@ def delete_produto_postback(request, id=None):
         except Exception as e:
             print("Erro salvando edição de produto: %s" % e)
     return redirect("/produto")
+
+
 def create_produto_view(request, id=None):
     if request.method == 'POST':
         produto = request.POST.get("Produto")
@@ -112,6 +114,10 @@ def create_produto_view(request, id=None):
         promocao = request.POST.get("promocao")
         msgPromocao = request.POST.get("msgPromocao")
         preco = request.POST.get("preco")
+        # Obter os IDs de categoria e fabricante do POST
+        categoria_id = request.POST.get("CategoriaFk")
+        fabricante_id = request.POST.get("FabricanteFk")
+        
         image = request.POST.get("image")
         print("postback-create")
         print(produto)
@@ -120,6 +126,8 @@ def create_produto_view(request, id=None):
         print(msgPromocao)
         print(preco)
         print(image)
+        print(f"Categoria ID: {categoria_id}, Fabricante ID: {fabricante_id}") # Adicionado para debug
+
         try:
             obj_produto = Produto()
             obj_produto.Produto = produto
@@ -132,6 +140,17 @@ def create_produto_view(request, id=None):
                 obj_produto.preco = preco
             obj_produto.criado_em = timezone.now()
             obj_produto.alterado_em = obj_produto.criado_em
+
+            # Associar Categoria e Fabricante ao produto
+            if categoria_id and categoria_id != '-1':
+                obj_produto.categoria = Categoria.objects.filter(id=categoria_id).first()
+            else:
+                obj_produto.categoria = None # Definir como None se não selecionado ou -1
+            
+            if fabricante_id and fabricante_id != '-1':
+                obj_produto.fabricante = Fabricante.objects.filter(id=fabricante_id).first()
+            else:
+                obj_produto.fabricante = None # Definir como None se não selecionado ou -1
 
             if request.FILES is not None:
                 num_files = len(request.FILES.getlist('image'))
@@ -147,4 +166,9 @@ def create_produto_view(request, id=None):
         except Exception as e:
             print("Erro inserindo produto: %s" % e)
         return redirect("/produto")
-    return render(request, template_name='produto/produto-create.html',status=200)
+    
+    # Para o método GET, passe as categorias e fabricantes para o template
+    Fabricantes = Fabricante.objects.all()
+    Categorias = Categoria.objects.all()
+    context = {'fabricantes': Fabricantes, 'categorias': Categorias}
+    return render(request, template_name='produto/produto-create.html', context=context, status=200)
